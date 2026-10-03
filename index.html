@@ -1,0 +1,4872 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>My Tasks — Personal Dashboard</title>
+
+<style>
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+:root {
+    --bg: #080b10;
+    --bg-secondary: #0e131b;
+    --panel: #111821;
+    --panel-hover: #151e29;
+    --border: #202b38;
+    --text: #f4f7fb;
+    --muted: #8491a3;
+
+    --blue: #55b8ff;
+    --blue-dark: #238bd1;
+
+    --green: #4ade80;
+    --yellow: #facc15;
+    --orange: #fb923c;
+    --red: #f87171;
+    --purple: #a78bfa;
+
+    --shadow: 0 15px 40px rgba(0,0,0,.25);
+    --radius: 16px;
+}
+
+body.light {
+    --bg: #f2f5f8;
+    --bg-secondary: #e8edf2;
+    --panel: #ffffff;
+    --panel-hover: #f4f7fa;
+    --border: #d9e0e7;
+    --text: #111827;
+    --muted: #687586;
+
+    --blue: #168fe0;
+    --blue-dark: #0878bd;
+
+    --shadow: 0 15px 40px rgba(20,40,60,.10);
+}
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Inter, Arial, Helvetica, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+/* =========================================================
+   APP
+========================================================= */
+
+.app {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar {
+    width: 250px;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border);
+
+    padding: 22px 15px;
+
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    overflow-y: auto;
+
+    z-index: 50;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 7px 10px 25px;
+
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.logo-icon {
+    width: 35px;
+    height: 35px;
+
+    display: grid;
+    place-items: center;
+
+    background: linear-gradient(
+        135deg,
+        var(--blue),
+        var(--blue-dark)
+    );
+
+    border-radius: 10px;
+
+    color: white;
+}
+
+.menu-title {
+    color: var(--muted);
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 1.2px;
+
+    margin: 20px 10px 8px;
+
+    text-transform: uppercase;
+}
+
+.nav-item {
+    width: 100%;
+
+    border: 0;
+    background: transparent;
+
+    color: var(--muted);
+
+    padding: 11px 12px;
+
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    cursor: pointer;
+
+    margin-bottom: 3px;
+
+    text-align: left;
+
+    font-size: 14px;
+
+    transition: .2s;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    background: var(--panel);
+    color: var(--text);
+}
+
+.nav-item.active {
+    box-shadow: inset 3px 0 0 var(--blue);
+}
+
+.category-dot {
+    width: 9px;
+    height: 9px;
+
+    border-radius: 50%;
+
+    background: var(--blue);
+}
+
+.mobile-menu {
+    display: none;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main {
+    margin-left: 250px;
+
+    width: calc(100% - 250px);
+
+    min-height: 100vh;
+}
+
+.topbar {
+    height: 70px;
+
+    border-bottom: 1px solid var(--border);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 28px;
+
+    background: rgba(8,11,16,.8);
+
+    backdrop-filter: blur(15px);
+
+    position: sticky;
+    top: 0;
+
+    z-index: 30;
+}
+
+body.light .topbar {
+    background: rgba(242,245,248,.8);
+}
+
+.topbar-title {
+    font-weight: 700;
+}
+
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.icon-btn {
+    width: 40px;
+    height: 40px;
+
+    border: 1px solid var(--border);
+
+    background: var(--panel);
+
+    color: var(--text);
+
+    border-radius: 10px;
+
+    display: grid;
+    place-items: center;
+
+    font-size: 17px;
+}
+
+.icon-btn:hover {
+    background: var(--panel-hover);
+}
+
+.primary-btn {
+    border: 0;
+
+    color: white;
+
+    background: linear-gradient(
+        135deg,
+        var(--blue),
+        var(--blue-dark)
+    );
+
+    padding: 11px 17px;
+
+    border-radius: 10px;
+
+    font-weight: 700;
+}
+
+.primary-btn:hover {
+    filter: brightness(1.08);
+}
+
+.secondary-btn {
+    border: 1px solid var(--border);
+
+    background: var(--panel);
+
+    color: var(--text);
+
+    padding: 10px 15px;
+
+    border-radius: 10px;
+}
+
+.secondary-btn:hover {
+    background: var(--panel-hover);
+}
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.content {
+    padding: 30px;
+
+    max-width: 1500px;
+
+    margin: auto;
+}
+
+.view {
+    display: none;
+}
+
+.view.active {
+    display: block;
+}
+
+.page-heading {
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 25px;
+}
+
+.page-heading h1 {
+    font-size: 30px;
+
+    margin-bottom: 5px;
+}
+
+.page-heading p {
+    color: var(--muted);
+}
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card {
+    background: var(--panel);
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    padding: 20px;
+
+    box-shadow: var(--shadow);
+}
+
+.section-card {
+    margin-top: 20px;
+}
+
+.card-heading {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 17px;
+}
+
+.card-heading h3 {
+    font-size: 17px;
+}
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+.dashboard-grid {
+    display: grid;
+
+    grid-template-columns: 1.7fr 1fr;
+
+    gap: 20px;
+}
+
+.hero-card {
+    padding: 28px;
+
+    background:
+        radial-gradient(
+            circle at 90% 10%,
+            rgba(85,184,255,.18),
+            transparent 35%
+        ),
+        var(--panel);
+}
+
+.hero-card h2 {
+    font-size: 28px;
+
+    margin-bottom: 8px;
+}
+
+.hero-card p {
+    color: var(--muted);
+}
+
+.progress-wrap {
+    margin-top: 25px;
+}
+
+.progress-label {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 8px;
+
+    font-size: 13px;
+
+    color: var(--muted);
+}
+
+.progress {
+    height: 10px;
+
+    background: var(--bg-secondary);
+
+    border-radius: 99px;
+
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+
+    width: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--blue),
+            var(--purple)
+        );
+
+    border-radius: inherit;
+
+    transition: width .4s;
+}
+
+/* =========================================================
+   STATS CARDS
+========================================================= */
+
+.stats-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap: 15px;
+
+    margin-top: 20px;
+}
+
+.stat-card {
+    background: var(--panel);
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    padding: 18px;
+}
+
+.stat-icon {
+    font-size: 23px;
+
+    margin-bottom: 12px;
+}
+
+.stat-number {
+    font-size: 25px;
+
+    font-weight: 800;
+}
+
+.stat-name {
+    color: var(--muted);
+
+    font-size: 12px;
+
+    margin-top: 3px;
+}
+
+/* =========================================================
+   QUICK ADD
+========================================================= */
+
+.quick-add {
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 25px;
+}
+
+.quick-add input {
+    flex: 1;
+}
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+input,
+select,
+textarea {
+    width: 100%;
+
+    background: var(--bg-secondary);
+
+    color: var(--text);
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    padding: 11px 13px;
+
+    outline: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--blue);
+}
+
+textarea {
+    min-height: 100px;
+
+    resize: vertical;
+}
+
+/* =========================================================
+   TASKS
+========================================================= */
+
+.task-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+}
+
+.task {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 12px;
+
+    padding: 14px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    background: var(--panel);
+
+    transition: .2s;
+}
+
+.task:hover {
+    background: var(--panel-hover);
+}
+
+.task.completed {
+    opacity: .55;
+}
+
+.check {
+    width: 22px;
+    height: 22px;
+
+    border: 2px solid var(--muted);
+
+    border-radius: 7px;
+
+    flex-shrink: 0;
+
+    margin-top: 1px;
+
+    cursor: pointer;
+
+    display: grid;
+    place-items: center;
+
+    background: transparent;
+
+    color: white;
+}
+
+.task.completed .check {
+    background: var(--green);
+
+    border-color: var(--green);
+}
+
+.task.completed .task-title {
+    text-decoration: line-through;
+}
+
+.task-body {
+    flex: 1;
+
+    min-width: 0;
+}
+
+.task-title {
+    font-weight: 700;
+
+    word-break: break-word;
+}
+
+.task-meta {
+    display: flex;
+
+    gap: 7px;
+
+    flex-wrap: wrap;
+
+    margin-top: 7px;
+}
+
+.badge {
+    font-size: 10px;
+
+    padding: 4px 7px;
+
+    border-radius: 6px;
+
+    background: var(--bg-secondary);
+
+    color: var(--muted);
+}
+
+.badge.high {
+    color: var(--orange);
+}
+
+.badge.urgent {
+    color: var(--red);
+}
+
+.badge.low {
+    color: var(--green);
+}
+
+.task-actions {
+    display: flex;
+
+    gap: 4px;
+}
+
+.small-btn {
+    width: 32px;
+    height: 32px;
+
+    border: 0;
+
+    border-radius: 8px;
+
+    background: transparent;
+
+    color: var(--muted);
+}
+
+.small-btn:hover {
+    background: var(--bg-secondary);
+
+    color: var(--text);
+}
+
+/* =========================================================
+   FILTERS
+========================================================= */
+
+.filters {
+    display: grid;
+
+    grid-template-columns:
+        1fr 180px 180px 180px;
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+}
+
+/* =========================================================
+   CALENDAR
+========================================================= */
+
+.calendar {
+    display: grid;
+
+    grid-template-columns:
+        repeat(7,1fr);
+
+    gap: 8px;
+}
+
+.calendar-head {
+    text-align: center;
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    padding: 8px;
+}
+
+.calendar-day {
+    min-height: 105px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    padding: 9px;
+
+    background: var(--panel);
+}
+
+.calendar-day.today {
+    border-color: var(--blue);
+}
+
+.calendar-number {
+    font-weight: 800;
+
+    margin-bottom: 7px;
+}
+
+.calendar-task {
+    font-size: 10px;
+
+    background: rgba(85,184,255,.12);
+
+    color: var(--blue);
+
+    border-radius: 5px;
+
+    padding: 4px;
+
+    margin-top: 3px;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+}
+
+/* =========================================================
+   FOCUS
+========================================================= */
+
+.focus-layout {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 20px;
+}
+
+.timer {
+    text-align: center;
+
+    padding: 45px 20px;
+}
+
+.timer-display {
+    font-size:
+        clamp(60px, 9vw, 105px);
+
+    font-weight: 900;
+
+    letter-spacing: 2px;
+}
+
+.timer-mode {
+    color: var(--blue);
+
+    font-weight: 700;
+
+    margin-bottom: 12px;
+}
+
+.timer-buttons {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-top: 25px;
+}
+
+/* =========================================================
+   STATISTICS
+========================================================= */
+
+.stat-big {
+    font-size: 42px;
+
+    font-weight: 900;
+}
+
+.chart {
+    display: flex;
+
+    align-items: flex-end;
+
+    gap: 12px;
+
+    height: 210px;
+
+    padding-top: 20px;
+}
+
+.chart-bar {
+    flex: 1;
+
+    background:
+        linear-gradient(
+            to top,
+            var(--blue-dark),
+            var(--blue)
+        );
+
+    border-radius:
+        8px 8px 2px 2px;
+
+    min-height: 4px;
+
+    position: relative;
+}
+
+.chart-bar span {
+    position: absolute;
+
+    bottom: -23px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    font-size: 10px;
+
+    color: var(--muted);
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal-bg {
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0,0,0,.7);
+
+    backdrop-filter: blur(5px);
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    z-index: 100;
+}
+
+.modal-bg.open {
+    display: flex;
+}
+
+.modal {
+    width: min(600px,100%);
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    background: var(--panel);
+
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 30px 100px rgba(0,0,0,.5);
+
+    padding: 25px;
+}
+
+.modal-heading {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+.form-grid {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 13px;
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    display: block;
+
+    font-size: 12px;
+
+    color: var(--muted);
+
+    margin-bottom: 6px;
+}
+
+.modal-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 8px;
+
+    margin-top: 10px;
+}
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+.settings-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.setting {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 16px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+}
+
+.setting-info strong {
+    display: block;
+}
+
+.setting-info span {
+    display: block;
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    margin-top: 3px;
+}
+
+/* =========================================================
+   TOGGLE
+========================================================= */
+
+.switch {
+    position: relative;
+
+    width: 45px;
+
+    height: 25px;
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+
+    inset: 0;
+
+    background: var(--border);
+
+    border-radius: 20px;
+
+    cursor: pointer;
+}
+
+.slider::before {
+    content: "";
+
+    position: absolute;
+
+    width: 19px;
+    height: 19px;
+
+    left: 3px;
+    top: 3px;
+
+    background: white;
+
+    border-radius: 50%;
+
+    transition: .2s;
+}
+
+.switch input:checked + .slider {
+    background: var(--blue);
+}
+
+.switch input:checked + .slider::before {
+    transform: translateX(20px);
+}
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.empty {
+    text-align: center;
+
+    padding: 45px 20px;
+
+    color: var(--muted);
+}
+
+.empty-icon {
+    font-size: 38px;
+
+    margin-bottom: 10px;
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast-container {
+    position: fixed;
+
+    right: 20px;
+
+    bottom: 20px;
+
+    z-index: 200;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.toast {
+    background: var(--panel);
+
+    border: 1px solid var(--border);
+
+    border-left:
+        3px solid var(--blue);
+
+    padding: 13px 17px;
+
+    border-radius: 10px;
+
+    box-shadow: var(--shadow);
+
+    animation:
+        toastIn .25s ease;
+}
+
+@keyframes toastIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1100px) {
+
+    .dashboard-grid,
+    .focus-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .filters {
+        grid-template-columns: 1fr 1fr;
+    }
+
+}
+
+@media(max-width:800px) {
+
+    .sidebar {
+        transform: translateX(-100%);
+
+        transition: .25s;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .main {
+        margin-left: 0;
+
+        width: 100%;
+    }
+
+    .mobile-menu {
+        display: grid;
+    }
+
+    .content {
+        padding: 20px 15px;
+    }
+
+    .stats-grid {
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+    .calendar {
+        gap: 4px;
+    }
+
+    .calendar-day {
+        min-height: 80px;
+
+        padding: 5px;
+    }
+
+}
+
+@media(max-width:550px) {
+
+    .topbar {
+        padding: 0 15px;
+    }
+
+    .page-heading {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .page-heading h1 {
+        font-size: 25px;
+    }
+
+    .filters {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+
+    .quick-add {
+        flex-direction: column;
+    }
+
+    .calendar-day {
+        min-height: 60px;
+
+        font-size: 11px;
+    }
+
+    .calendar-task {
+        display: none;
+    }
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="logo">
+        <div class="logo-icon">✓</div>
+        <span>My Tasks</span>
+    </div>
+
+    <div class="menu-title">
+        Workspace
+    </div>
+
+    <button class="nav-item active" data-view="dashboard">
+        🏠 <span>Dashboard</span>
+    </button>
+
+    <button class="nav-item" data-view="tasks">
+        📋 <span>My Tasks</span>
+    </button>
+
+    <button class="nav-item" data-view="today">
+        📅 <span>Today</span>
+    </button>
+
+    <button class="nav-item" data-view="important">
+        ⭐ <span>Important</span>
+    </button>
+
+    <button class="nav-item" data-view="calendar">
+        🗓️ <span>Calendar</span>
+    </button>
+
+    <button class="nav-item" data-view="focus">
+        🎯 <span>Focus</span>
+    </button>
+
+    <button class="nav-item" data-view="stats">
+        📊 <span>Statistics</span>
+    </button>
+
+    <div class="menu-title">
+        Categories
+    </div>
+
+    <button class="nav-item" data-category="Gaming">
+        <span class="category-dot"></span>
+        🎮 Gaming
+    </button>
+
+    <button class="nav-item" data-category="Programming">
+        <span class="category-dot"></span>
+        💻 Programming
+    </button>
+
+    <button class="nav-item" data-category="YouTube">
+        <span class="category-dot"></span>
+        🎥 YouTube
+    </button>
+
+    <button class="nav-item" data-category="Learning">
+        <span class="category-dot"></span>
+        📚 Learning
+    </button>
+
+    <div class="menu-title">
+        System
+    </div>
+
+    <button class="nav-item" data-view="settings">
+        ⚙️ <span>Settings</span>
+    </button>
+
+</aside>
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <button
+        class="icon-btn mobile-menu"
+        id="mobileMenu"
+    >
+        ☰
+    </button>
+
+    <div
+        class="topbar-title"
+        id="topbarTitle"
+    >
+        Dashboard
+    </div>
+
+    <div class="topbar-actions">
+
+        <button
+            class="icon-btn"
+            id="themeBtn"
+            title="Toggle theme"
+        >
+            🌙
+        </button>
+
+        <button
+            class="primary-btn"
+            id="addTaskBtn"
+        >
+            + Add Task
+        </button>
+
+    </div>
+
+</header>
+
+<div class="content">
+
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
+
+<section
+    class="view active"
+    id="view-dashboard"
+>
+
+    <div class="page-heading">
+
+        <div>
+
+            <h1 id="greeting">
+                Good morning 👋
+            </h1>
+
+            <p id="currentDate"></p>
+
+        </div>
+
+    </div>
+
+    <div class="dashboard-grid">
+
+        <div>
+
+            <div class="card hero-card">
+
+                <h2>
+                    Your progress today
+                </h2>
+
+                <p>
+                    Stay focused and complete your most important tasks.
+                </p>
+
+                <div class="progress-wrap">
+
+                    <div class="progress-label">
+
+                        <span id="progressText">
+                            0 of 0 completed
+                        </span>
+
+                        <span id="progressPercent">
+                            0%
+                        </span>
+
+                    </div>
+
+                    <div class="progress">
+
+                        <div
+                            class="progress-bar"
+                            id="mainProgress"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+                <div class="quick-add">
+
+                    <input
+                        id="quickInput"
+                        placeholder="What do you need to get done?"
+                    >
+
+                    <button
+                        class="primary-btn"
+                        id="quickAddBtn"
+                    >
+                        Add
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        📋
+                    </div>
+
+                    <div
+                        class="stat-number"
+                        id="statOpen"
+                    >
+                        0
+                    </div>
+
+                    <div class="stat-name">
+                        Open Tasks
+                    </div>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        ✅
+                    </div>
+
+                    <div
+                        class="stat-number"
+                        id="statDone"
+                    >
+                        0
+                    </div>
+
+                    <div class="stat-name">
+                        Completed
+                    </div>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        🔥
+                    </div>
+
+                    <div
+                        class="stat-number"
+                        id="statStreak"
+                    >
+                        0
+                    </div>
+
+                    <div class="stat-name">
+                        Day Streak
+                    </div>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        ⭐
+                    </div>
+
+                    <div
+                        class="stat-number"
+                        id="statImportant"
+                    >
+                        0
+                    </div>
+
+                    <div class="stat-name">
+                        Important
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="card section-card">
+
+                <div class="card-heading">
+
+                    <h3>
+                        Today
+                    </h3>
+
+                    <button
+                        class="secondary-btn"
+                        onclick="showView('today')"
+                    >
+                        View All
+                    </button>
+
+                </div>
+
+                <div
+                    class="task-list"
+                    id="dashboardTasks"
+                ></div>
+
+            </div>
+
+        </div>
+
+        <div>
+
+            <div class="card">
+
+                <div class="card-heading">
+
+                    <h3>
+                        🔥 Your Streak
+                    </h3>
+
+                </div>
+
+                <div
+                    class="stat-big"
+                    id="streakBig"
+                >
+                    0 days
+                </div>
+
+                <p
+                    style="
+                        color:var(--muted);
+                        margin-top:8px
+                    "
+                >
+                    Complete at least one task every day.
+                </p>
+
+            </div>
+
+            <div class="card section-card">
+
+                <div class="card-heading">
+
+                    <h3>
+                        ⭐ Important
+                    </h3>
+
+                </div>
+
+                <div
+                    class="task-list"
+                    id="importantTasks"
+                ></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     ALL TASKS
+===================================================== -->
+
+<section
+    class="view"
+    id="view-tasks"
+>
+
+    <div class="page-heading">
+
+        <div>
+
+            <h1>
+                My Tasks
+            </h1>
+
+            <p>
+                Everything you need in one place.
+            </p>
+
+        </div>
+
+        <button
+            class="primary-btn"
+            onclick="openTaskModal()"
+        >
+            + Create Task
+        </button>
+
+    </div>
+
+    <div class="filters">
+
+        <input
+            id="searchInput"
+            placeholder="🔎 Search tasks..."
+        >
+
+        <select id="filterStatus">
+
+            <option value="all">
+                All Tasks
+            </option>
+
+            <option value="open">
+                Open
+            </option>
+
+            <option value="done">
+                Completed
+            </option>
+
+        </select>
+
+        <select id="filterPriority">
+
+            <option value="all">
+                All Priorities
+            </option>
+
+            <option value="urgent">
+                Urgent
+            </option>
+
+            <option value="high">
+                High
+            </option>
+
+            <option value="normal">
+                Normal
+            </option>
+
+            <option value="low">
+                Low
+            </option>
+
+        </select>
+
+        <select id="sortTasks">
+
+            <option value="created">
+                Newest First
+            </option>
+
+            <option value="date">
+                Due Date
+            </option>
+
+            <option value="priority">
+                Priority
+            </option>
+
+            <option value="name">
+                Name
+            </option>
+
+        </select>
+
+    </div>
+
+    <div class="card">
+
+        <div
+            class="task-list"
+            id="allTasks"
+        ></div>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     TODAY
+===================================================== -->
+
+<section
+    class="view"
+    id="view-today"
+>
+
+    <div class="page-heading">
+
+        <div>
+
+            <h1>
+                Today 📅
+            </h1>
+
+            <p id="todayDescription"></p>
+
+        </div>
+
+        <button
+            class="primary-btn"
+            onclick="openTaskModal()"
+        >
+            + Add Task
+        </button>
+
+    </div>
+
+    <div class="card">
+
+        <div
+            class="task-list"
+            id="todayTasks"
+        ></div>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     IMPORTANT
+===================================================== -->
+
+<section
+    class="view"
+    id="view-important"
+>
+
+    <div class="page-heading">
+
+        <div>
+
+            <h1>
+                Important Tasks ⭐
+            </h1>
+
+            <p>
+                Your high-priority tasks.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <div
+            class="task-list"
+            id="importantPageTasks"
+        ></div>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     CALENDAR
+===================================================== -->
+
+<section
+    class="view"
+    id="view-calendar"
+>
+
+    <div class="page-heading">
+
+        <div>
+
+            <h1>
+                Calendar 🗓️
+            </h1>
+
+            <p id="calendarTitle"></p>
+
+        </div>
+
+        <div
+            style="
+                display:flex;
+                gap:7px
+            "
+        >
+
+            <button
+                class="icon-btn"
+                id="prevMonth"
+            >
+                ‹
+            </button>
+
+            <button
+                class="icon-btn"
+                id="nextMonth"
+            >
+                ›
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <div
+            class="calendar"
+            id="calendar"
+        ></div>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     FOCUS
+===================================================== -->
+
+<section
+    class="view"
+    id="view-focus"
+>
+
+    <div class="page-heading">
+
+        <div>
+
+            <h1>
+                Focus 🎯
+            </h1>
+
+            <p>
+                Focus on one task at a time.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="focus-layout">
+
+        <div class="card timer">
+
+            <div
+                class="timer-mode"
+                id="timerMode"
+            >
+                Focus Session
+            </div>
+
+            <div
+                class="timer-display"
+                id="timerDisplay"
+            >
+                25:00
+            </div>
+
+            <div class="timer-buttons">
+
+                <button
+                    class="primary-btn"
+                    id="timerStart"
+                >
+                    Start
+                </button>
+
+                <button
+                    class="secondary-btn"
+                    id="timerReset"
+                >
+                    Reset
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <div class="card-heading">
+
+                <h3>
+                    Focus Task
+                </h3>
+
+            </div>
+
+            <select id="focusTaskSelect">
+
+                <option value="">
+                    No task selected
+                </option>
+
+            </select>
+
+            <div
+                style="
+                    margin-top:20px;
+                    color:var(--muted);
+                    line-height:1.7
+                "
+            >
+
+                <p>
+                    🍅 25 minutes of focus
+                </p>
+
+                <p>
+                    ☕ 5 minute break
+                </p>
+
+                <p>
+                    🔁 Repeat
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     STATISTICS
+===================================================== -->
+
+<section
+    class="view"
+    id="view-stats"
+>
+
+    <div class="page-heading">
+
+        <div>
+
+            <h1>
+                Statistics 📊
+            </h1>
+
+            <p>
+                Track your productivity.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                ✅
+            </div>
+
+            <div
+                class="stat-number"
+                id="totalDone"
+            >
+                0
+            </div>
+
+            <div class="stat-name">
+                Total Completed
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📋
+            </div>
+
+            <div
+                class="stat-number"
+                id="totalTasks"
+            >
+                0
+            </div>
+
+            <div class="stat-name">
+                Total Tasks
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📈
+            </div>
+
+            <div
+                class="stat-number"
+                id="completionRate"
+            >
+                0%
+            </div>
+
+            <div class="stat-name">
+                Completion Rate
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🔥
+            </div>
+
+            <div
+                class="stat-number"
+                id="statsStreak"
+            >
+                0
+            </div>
+
+            <div class="stat-name">
+                Current Streak
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card section-card">
+
+        <div class="card-heading">
+
+            <h3>
+                Last 7 Days
+            </h3>
+
+        </div>
+
+        <div
+            class="chart"
+            id="weekChart"
+        ></div>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     SETTINGS
+===================================================== -->
+
+<section
+    class="view"
+    id="view-settings"
+>
+
+    <div class="page-heading">
+
+        <div>
+
+            <h1>
+                Settings ⚙️
+            </h1>
+
+            <p>
+                Customize your task manager.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <div class="settings-list">
+
+            <div class="setting">
+
+                <div class="setting-info">
+
+                    <strong>
+                        Dark Mode
+                    </strong>
+
+                    <span>
+                        Use the dark interface.
+                    </span>
+
+                </div>
+
+                <label class="switch">
+
+                    <input
+                        type="checkbox"
+                        id="darkToggle"
+                        checked
+                    >
+
+                    <span class="slider"></span>
+
+                </label>
+
+            </div>
+
+            <div class="setting">
+
+                <div class="setting-info">
+
+                    <strong>
+                        Notifications
+                    </strong>
+
+                    <span>
+                        Allow browser notifications.
+                    </span>
+
+                </div>
+
+                <button
+                    class="secondary-btn"
+                    id="notificationBtn"
+                >
+                    Enable
+                </button>
+
+            </div>
+
+            <div class="setting">
+
+                <div class="setting-info">
+
+                    <strong>
+                        Export Data
+                    </strong>
+
+                    <span>
+                        Save your tasks as a JSON backup.
+                    </span>
+
+                </div>
+
+                <button
+                    class="secondary-btn"
+                    id="exportBtn"
+                >
+                    Export
+                </button>
+
+            </div>
+
+            <div class="setting">
+
+                <div class="setting-info">
+
+                    <strong>
+                        Import Data
+                    </strong>
+
+                    <span>
+                        Restore a previous backup.
+                    </span>
+
+                </div>
+
+                <button
+                    class="secondary-btn"
+                    id="importBtn"
+                >
+                    Import
+                </button>
+
+                <input
+                    type="file"
+                    id="importFile"
+                    accept=".json"
+                    hidden
+                >
+
+            </div>
+
+            <div class="setting">
+
+                <div class="setting-info">
+
+                    <strong>
+                        Delete All Data
+                    </strong>
+
+                    <span>
+                        Permanently delete all tasks.
+                    </span>
+
+                </div>
+
+                <button
+                    class="secondary-btn"
+                    id="clearBtn"
+                >
+                    Delete
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+</div>
+
+</main>
+
+</div>
+
+<!-- =====================================================
+     TASK MODAL
+===================================================== -->
+
+<div
+    class="modal-bg"
+    id="modalBg"
+>
+
+    <div class="modal">
+
+        <div class="modal-heading">
+
+            <h2 id="modalTitle">
+                New Task
+            </h2>
+
+            <button
+                class="icon-btn"
+                id="closeModal"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <form id="taskForm">
+
+            <input
+                type="hidden"
+                id="taskId"
+            >
+
+            <div class="form-grid">
+
+                <div class="form-group full">
+
+                    <label>
+                        Task *
+                    </label>
+
+                    <input
+                        id="taskName"
+                        required
+                        placeholder="e.g. Finish my website"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Category
+                    </label>
+
+                    <select id="taskCategory">
+
+                        <option>
+                            Everyday
+                        </option>
+
+                        <option>
+                            Gaming
+                        </option>
+
+                        <option>
+                            Programming
+                        </option>
+
+                        <option>
+                            YouTube
+                        </option>
+
+                        <option>
+                            Learning
+                        </option>
+
+                        <option>
+                            School
+                        </option>
+
+                        <option>
+                            Ideas
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Priority
+                    </label>
+
+                    <select id="taskPriority">
+
+                        <option value="normal">
+                            Normal
+                        </option>
+
+                        <option value="low">
+                            Low
+                        </option>
+
+                        <option value="high">
+                            High
+                        </option>
+
+                        <option value="urgent">
+                            Urgent
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Due Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="taskDate"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Time
+                    </label>
+
+                    <input
+                        type="time"
+                        id="taskTime"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Repeat
+                    </label>
+
+                    <select id="taskRepeat">
+
+                        <option value="none">
+                            Don't repeat
+                        </option>
+
+                        <option value="daily">
+                            Daily
+                        </option>
+
+                        <option value="weekly">
+                            Weekly
+                        </option>
+
+                        <option value="monthly">
+                            Monthly
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Subtasks
+                    </label>
+
+                    <input
+                        id="taskSubtasks"
+                        placeholder="e.g. Design, Code, Test"
+                    >
+
+                </div>
+
+                <div class="form-group full">
+
+                    <label>
+                        Notes
+                    </label>
+
+                    <textarea
+                        id="taskNotes"
+                        placeholder="Additional information..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="secondary-btn"
+                    id="cancelModal"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="primary-btn"
+                >
+                    Save Task
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<div
+    class="toast-container"
+    id="toastContainer"
+></div>
+
+<script>
+
+/* =========================================================
+   STORAGE
+========================================================= */
+
+const STORAGE_KEY = "myTasksAppData";
+
+let tasks =
+    JSON.parse(
+        localStorage.getItem(STORAGE_KEY)
+    ) || [];
+
+let currentView = "dashboard";
+
+let calendarDate = new Date();
+
+let editingTaskId = null;
+
+/* =========================================================
+   SAVE DATA
+========================================================= */
+
+function saveData() {
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(tasks)
+    );
+
+}
+
+/* =========================================================
+   DATE HELPERS
+========================================================= */
+
+function todayString() {
+
+    const d = new Date();
+
+    const year =
+        d.getFullYear();
+
+    const month =
+        String(
+            d.getMonth() + 1
+        ).padStart(2,"0");
+
+    const day =
+        String(
+            d.getDate()
+        ).padStart(2,"0");
+
+    return `${year}-${month}-${day}`;
+
+}
+
+function formatDate(date) {
+
+    if (!date) return "";
+
+    const d =
+        new Date(
+            date + "T00:00:00"
+        );
+
+    return d.toLocaleDateString(
+        "en-US",
+        {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        }
+    );
+
+}
+
+/* =========================================================
+   SECURITY
+========================================================= */
+
+function escapeHTML(text) {
+
+    return String(text || "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+/* =========================================================
+   PRIORITY
+========================================================= */
+
+function priorityText(priority) {
+
+    return {
+
+        urgent: "Urgent",
+
+        high: "High",
+
+        normal: "Normal",
+
+        low: "Low"
+
+    }[priority] || "Normal";
+
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function showToast(message) {
+
+    const container =
+        document.getElementById(
+            "toastContainer"
+        );
+
+    const toast =
+        document.createElement("div");
+
+    toast.className = "toast";
+
+    toast.textContent = message;
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+
+        toast.remove();
+
+    },3000);
+
+}
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+document
+    .querySelectorAll(".nav-item")
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                if (button.dataset.view) {
+
+                    showView(
+                        button.dataset.view
+                    );
+
+                }
+
+                else if (
+                    button.dataset.category
+                ) {
+
+                    showCategory(
+                        button.dataset.category
+                    );
+
+                }
+
+                document
+                    .getElementById("sidebar")
+                    .classList.remove("open");
+
+            }
+        );
+
+    });
+
+function showView(view) {
+
+    currentView = view;
+
+    document
+        .querySelectorAll(".view")
+        .forEach(v => {
+
+            v.classList.remove("active");
+
+        });
+
+    const target =
+        document.getElementById(
+            "view-" + view
+        );
+
+    if (target) {
+
+        target.classList.add("active");
+
+    }
+
+    document
+        .querySelectorAll(".nav-item")
+        .forEach(item => {
+
+            item.classList.remove("active");
+
+            if (
+                item.dataset.view === view
+            ) {
+
+                item.classList.add("active");
+
+            }
+
+        });
+
+    const titles = {
+
+        dashboard: "Dashboard",
+
+        tasks: "My Tasks",
+
+        today: "Today",
+
+        important: "Important",
+
+        calendar: "Calendar",
+
+        focus: "Focus",
+
+        stats: "Statistics",
+
+        settings: "Settings"
+
+    };
+
+    document
+        .getElementById("topbarTitle")
+        .textContent =
+        titles[view] || "My Tasks";
+
+    renderAll();
+
+}
+
+function showCategory(category) {
+
+    showView("tasks");
+
+    document
+        .getElementById("searchInput")
+        .value = category;
+
+    renderAllTasks();
+
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+const modalBg =
+    document.getElementById("modalBg");
+
+function openTaskModal(task = null) {
+
+    modalBg.classList.add("open");
+
+    if (task) {
+
+        editingTaskId = task.id;
+
+        document
+            .getElementById("modalTitle")
+            .textContent =
+            "Edit Task";
+
+        document
+            .getElementById("taskId")
+            .value = task.id;
+
+        document
+            .getElementById("taskName")
+            .value =
+            task.title || "";
+
+        document
+            .getElementById("taskCategory")
+            .value =
+            task.category || "Everyday";
+
+        document
+            .getElementById("taskPriority")
+            .value =
+            task.priority || "normal";
+
+        document
+            .getElementById("taskDate")
+            .value =
+            task.date || "";
+
+        document
+            .getElementById("taskTime")
+            .value =
+            task.time || "";
+
+        document
+            .getElementById("taskRepeat")
+            .value =
+            task.repeat || "none";
+
+        document
+            .getElementById("taskSubtasks")
+            .value =
+            (task.subtasks || [])
+                .join(", ");
+
+        document
+            .getElementById("taskNotes")
+            .value =
+            task.notes || "";
+
+    }
+
+    else {
+
+        editingTaskId = null;
+
+        document
+            .getElementById("modalTitle")
+            .textContent =
+            "New Task";
+
+        document
+            .getElementById("taskForm")
+            .reset();
+
+        document
+            .getElementById("taskDate")
+            .value =
+            todayString();
+
+    }
+
+    setTimeout(() => {
+
+        document
+            .getElementById("taskName")
+            .focus();
+
+    },100);
+
+}
+
+function closeModal() {
+
+    modalBg.classList.remove("open");
+
+    editingTaskId = null;
+
+}
+
+document
+    .getElementById("addTaskBtn")
+    .addEventListener(
+        "click",
+        () => openTaskModal()
+    );
+
+document
+    .getElementById("closeModal")
+    .addEventListener(
+        "click",
+        closeModal
+    );
+
+document
+    .getElementById("cancelModal")
+    .addEventListener(
+        "click",
+        closeModal
+    );
+
+modalBg.addEventListener(
+    "click",
+    e => {
+
+        if (e.target === modalBg) {
+
+            closeModal();
+
+        }
+
+    }
+);
+
+/* =========================================================
+   CREATE / UPDATE TASK
+========================================================= */
+
+document
+    .getElementById("taskForm")
+    .addEventListener(
+        "submit",
+        e => {
+
+            e.preventDefault();
+
+            const title =
+                document
+                    .getElementById("taskName")
+                    .value
+                    .trim();
+
+            if (!title) return;
+
+            const subtasksRaw =
+                document
+                    .getElementById("taskSubtasks")
+                    .value;
+
+            const subtasks =
+                subtasksRaw
+                    .split(",")
+                    .map(
+                        x => x.trim()
+                    )
+                    .filter(Boolean);
+
+            if (editingTaskId) {
+
+                const task =
+                    tasks.find(
+                        t =>
+                            t.id ===
+                            editingTaskId
+                    );
+
+                if (task) {
+
+                    task.title = title;
+
+                    task.category =
+                        document
+                            .getElementById(
+                                "taskCategory"
+                            )
+                            .value;
+
+                    task.priority =
+                        document
+                            .getElementById(
+                                "taskPriority"
+                            )
+                            .value;
+
+                    task.date =
+                        document
+                            .getElementById(
+                                "taskDate"
+                            )
+                            .value;
+
+                    task.time =
+                        document
+                            .getElementById(
+                                "taskTime"
+                            )
+                            .value;
+
+                    task.repeat =
+                        document
+                            .getElementById(
+                                "taskRepeat"
+                            )
+                            .value;
+
+                    task.subtasks =
+                        subtasks;
+
+                    task.notes =
+                        document
+                            .getElementById(
+                                "taskNotes"
+                            )
+                            .value;
+
+                }
+
+                showToast(
+                    "Task updated."
+                );
+
+            }
+
+            else {
+
+                const task = {
+
+                    id:
+                        Date.now().toString(),
+
+                    title,
+
+                    category:
+                        document
+                            .getElementById(
+                                "taskCategory"
+                            )
+                            .value,
+
+                    priority:
+                        document
+                            .getElementById(
+                                "taskPriority"
+                            )
+                            .value,
+
+                    date:
+                        document
+                            .getElementById(
+                                "taskDate"
+                            )
+                            .value,
+
+                    time:
+                        document
+                            .getElementById(
+                                "taskTime"
+                            )
+                            .value,
+
+                    repeat:
+                        document
+                            .getElementById(
+                                "taskRepeat"
+                            )
+                            .value,
+
+                    subtasks,
+
+                    notes:
+                        document
+                            .getElementById(
+                                "taskNotes"
+                            )
+                            .value,
+
+                    completed: false,
+
+                    createdAt:
+                        new Date()
+                            .toISOString(),
+
+                    completedAt: null
+
+                };
+
+                tasks.unshift(task);
+
+                showToast(
+                    "Task created."
+                );
+
+            }
+
+            saveData();
+
+            closeModal();
+
+            renderAll();
+
+        }
+    );
+
+/* =========================================================
+   QUICK ADD
+========================================================= */
+
+function quickAdd() {
+
+    const input =
+        document.getElementById(
+            "quickInput"
+        );
+
+    const title =
+        input.value.trim();
+
+    if (!title) return;
+
+    tasks.unshift({
+
+        id:
+            Date.now().toString(),
+
+        title,
+
+        category: "Everyday",
+
+        priority: "normal",
+
+        date: todayString(),
+
+        time: "",
+
+        repeat: "none",
+
+        subtasks: [],
+
+        notes: "",
+
+        completed: false,
+
+        createdAt:
+            new Date().toISOString(),
+
+        completedAt: null
+
+    });
+
+    input.value = "";
+
+    saveData();
+
+    renderAll();
+
+    showToast(
+        "Task added."
+    );
+
+}
+
+document
+    .getElementById("quickAddBtn")
+    .addEventListener(
+        "click",
+        quickAdd
+    );
+
+document
+    .getElementById("quickInput")
+    .addEventListener(
+        "keydown",
+        e => {
+
+            if (e.key === "Enter") {
+
+                quickAdd();
+
+            }
+
+        }
+    );
+
+/* =========================================================
+   TASK ACTIONS
+========================================================= */
+
+function toggleTask(id) {
+
+    const task =
+        tasks.find(
+            t => t.id === id
+        );
+
+    if (!task) return;
+
+    task.completed =
+        !task.completed;
+
+    task.completedAt =
+        task.completed
+            ? new Date()
+                .toISOString()
+            : null;
+
+    saveData();
+
+    renderAll();
+
+    if (task.completed) {
+
+        showToast(
+            "Task completed! 🎉"
+        );
+
+    }
+
+}
+
+function deleteTask(id) {
+
+    const task =
+        tasks.find(
+            t => t.id === id
+        );
+
+    if (!task) return;
+
+    if (
+        !confirm(
+            `Delete "${task.title}"?`
+        )
+    ) {
+
+        return;
+
+    }
+
+    tasks =
+        tasks.filter(
+            t => t.id !== id
+        );
+
+    saveData();
+
+    renderAll();
+
+    showToast(
+        "Task deleted."
+    );
+
+}
+
+function editTask(id) {
+
+    const task =
+        tasks.find(
+            t => t.id === id
+        );
+
+    if (task) {
+
+        openTaskModal(task);
+
+    }
+
+}
+
+function startTask(id) {
+
+    const select =
+        document.getElementById(
+            "focusTaskSelect"
+        );
+
+    select.value = id;
+
+    showView("focus");
+
+}
+
+/* =========================================================
+   TASK HTML
+========================================================= */
+
+function taskHTML(task) {
+
+    return `
+
+        <div
+            class="task
+            ${task.completed
+                ? "completed"
+                : ""}"
+        >
+
+            <button
+                class="check"
+                onclick="
+                    toggleTask('${task.id}')
+                "
+                title="Complete task"
+            >
+                ${
+                    task.completed
+                        ? "✓"
+                        : ""
+                }
+            </button>
+
+            <div class="task-body">
+
+                <div class="task-title">
+
+                    ${escapeHTML(
+                        task.title
+                    )}
+
+                </div>
+
+                <div class="task-meta">
+
+                    <span class="badge">
+
+                        ${escapeHTML(
+                            task.category
+                        )}
+
+                    </span>
+
+                    <span
+                        class="
+                            badge
+                            ${task.priority}
+                        "
+                    >
+
+                        ${priorityText(
+                            task.priority
+                        )}
+
+                    </span>
+
+                    ${
+                        task.date
+                        ? `
+                            <span class="badge">
+
+                                📅
+                                ${formatDate(
+                                    task.date
+                                )}
+
+                            </span>
+                        `
+                        : ""
+                    }
+
+                    ${
+                        task.time
+                        ? `
+                            <span class="badge">
+
+                                🕐
+                                ${escapeHTML(
+                                    task.time
+                                )}
+
+                            </span>
+                        `
+                        : ""
+                    }
+
+                    ${
+                        task.repeat !==
+                        "none"
+                        ? `
+                            <span class="badge">
+
+                                🔄
+                                ${
+                                    task.repeat ===
+                                    "daily"
+                                        ? "Daily"
+                                        : task.repeat ===
+                                          "weekly"
+                                            ? "Weekly"
+                                            : "Monthly"
+                                }
+
+                            </span>
+                        `
+                        : ""
+                    }
+
+                </div>
+
+            </div>
+
+            <div class="task-actions">
+
+                <button
+                    class="small-btn"
+                    onclick="
+                        startTask(
+                            '${task.id}'
+                        )
+                    "
+                    title="Focus"
+                >
+                    🎯
+                </button>
+
+                <button
+                    class="small-btn"
+                    onclick="
+                        editTask(
+                            '${task.id}'
+                        )
+                    "
+                    title="Edit"
+                >
+                    ✏️
+                </button>
+
+                <button
+                    class="small-btn"
+                    onclick="
+                        deleteTask(
+                            '${task.id}'
+                        )
+                    "
+                    title="Delete"
+                >
+                    🗑️
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+function renderTaskList(
+    elementId,
+    taskArray
+) {
+
+    const element =
+        document.getElementById(
+            elementId
+        );
+
+    if (!element) return;
+
+    if (!taskArray.length) {
+
+        element.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    ✨
+                </div>
+
+                <div>
+                    No tasks here.
+                </div>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+    element.innerHTML =
+        taskArray
+            .map(taskHTML)
+            .join("");
+
+}
+
+/* =========================================================
+   FILTERING
+========================================================= */
+
+function renderAllTasks() {
+
+    const search =
+        document
+            .getElementById(
+                "searchInput"
+            )
+            ?.value
+            .toLowerCase() || "";
+
+    const status =
+        document
+            .getElementById(
+                "filterStatus"
+            )
+            ?.value || "all";
+
+    const priority =
+        document
+            .getElementById(
+                "filterPriority"
+            )
+            ?.value || "all";
+
+    const sort =
+        document
+            .getElementById(
+                "sortTasks"
+            )
+            ?.value || "created";
+
+    let result =
+        [...tasks];
+
+    result =
+        result.filter(task => {
+
+            const matchesSearch =
+                task.title
+                    .toLowerCase()
+                    .includes(search) ||
+
+                task.category
+                    .toLowerCase()
+                    .includes(search);
+
+            const matchesStatus =
+                status === "all" ||
+
+                (
+                    status === "open" &&
+                    !task.completed
+                ) ||
+
+                (
+                    status === "done" &&
+                    task.completed
+                );
+
+            const matchesPriority =
+                priority === "all" ||
+                task.priority === priority;
+
+            return (
+                matchesSearch &&
+                matchesStatus &&
+                matchesPriority
+            );
+
+        });
+
+    if (sort === "date") {
+
+        result.sort(
+            (a,b) =>
+                (
+                    a.date || "9999"
+                ).localeCompare(
+                    b.date || "9999"
+                )
+        );
+
+    }
+
+    if (sort === "name") {
+
+        result.sort(
+            (a,b) =>
+                a.title.localeCompare(
+                    b.title
+                )
+        );
+
+    }
+
+    if (sort === "priority") {
+
+        const weights = {
+
+            urgent: 4,
+
+            high: 3,
+
+            normal: 2,
+
+            low: 1
+
+        };
+
+        result.sort(
+            (a,b) =>
+                weights[b.priority] -
+                weights[a.priority]
+        );
+
+    }
+
+    if (sort === "created") {
+
+        result.sort(
+            (a,b) =>
+                new Date(
+                    b.createdAt
+                ) -
+                new Date(
+                    a.createdAt
+                )
+        );
+
+    }
+
+    renderTaskList(
+        "allTasks",
+        result
+    );
+
+}
+
+document
+    .getElementById("searchInput")
+    .addEventListener(
+        "input",
+        renderAllTasks
+    );
+
+document
+    .getElementById("filterStatus")
+    .addEventListener(
+        "change",
+        renderAllTasks
+    );
+
+document
+    .getElementById("filterPriority")
+    .addEventListener(
+        "change",
+        renderAllTasks
+    );
+
+document
+    .getElementById("sortTasks")
+    .addEventListener(
+        "change",
+        renderAllTasks
+    );
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function getTodayTasks() {
+
+    const today =
+        todayString();
+
+    return tasks.filter(
+        task =>
+            task.date === today
+    );
+
+}
+
+function updateDashboard() {
+
+    const todayTasks =
+        getTodayTasks();
+
+    const done =
+        todayTasks.filter(
+            t => t.completed
+        ).length;
+
+    const total =
+        todayTasks.length;
+
+    const percentage =
+        total
+            ? Math.round(
+                done / total * 100
+            )
+            : 0;
+
+    document
+        .getElementById(
+            "progressText"
+        )
+        .textContent =
+        `${done} of ${total} completed`;
+
+    document
+        .getElementById(
+            "progressPercent"
+        )
+        .textContent =
+        `${percentage}%`;
+
+    document
+        .getElementById(
+            "mainProgress"
+        )
+        .style.width =
+        percentage + "%";
+
+    const open =
+        tasks.filter(
+            t => !t.completed
+        ).length;
+
+    const completed =
+        tasks.filter(
+            t => t.completed
+        ).length;
+
+    const important =
+        tasks.filter(
+            t =>
+                !t.completed &&
+                (
+                    t.priority === "high" ||
+                    t.priority === "urgent"
+                )
+        ).length;
+
+    document
+        .getElementById(
+            "statOpen"
+        )
+        .textContent =
+        open;
+
+    document
+        .getElementById(
+            "statDone"
+        )
+        .textContent =
+        completed;
+
+    document
+        .getElementById(
+            "statImportant"
+        )
+        .textContent =
+        important;
+
+    const streak =
+        calculateStreak();
+
+    document
+        .getElementById(
+            "statStreak"
+        )
+        .textContent =
+        streak;
+
+    document
+        .getElementById(
+            "streakBig"
+        )
+        .textContent =
+        `${streak} ${
+            streak === 1
+                ? "day"
+                : "days"
+        }`;
+
+    renderTaskList(
+        "dashboardTasks",
+        todayTasks
+            .filter(
+                t => !t.completed
+            )
+            .slice(0,6)
+    );
+
+    renderTaskList(
+        "importantTasks",
+        tasks
+            .filter(
+                t =>
+                    !t.completed &&
+                    (
+                        t.priority === "high" ||
+                        t.priority === "urgent"
+                    )
+            )
+            .slice(0,6)
+    );
+
+}
+
+/* =========================================================
+   TODAY
+========================================================= */
+
+function updateToday() {
+
+    const todayTasks =
+        getTodayTasks();
+
+    document
+        .getElementById(
+            "todayDescription"
+        )
+        .textContent =
+        `${formatDate(
+            todayString()
+        )} · ${
+            todayTasks.length
+        } tasks`;
+
+    renderTaskList(
+        "todayTasks",
+        todayTasks
+    );
+
+}
+
+/* =========================================================
+   IMPORTANT
+========================================================= */
+
+function updateImportant() {
+
+    const important =
+        tasks.filter(
+            t =>
+                !t.completed &&
+                (
+                    t.priority === "high" ||
+                    t.priority === "urgent"
+                )
+        );
+
+    renderTaskList(
+        "importantPageTasks",
+        important
+    );
+
+}
+
+/* =========================================================
+   CALENDAR
+========================================================= */
+
+function renderCalendar() {
+
+    const calendar =
+        document.getElementById(
+            "calendar"
+        );
+
+    const year =
+        calendarDate.getFullYear();
+
+    const month =
+        calendarDate.getMonth();
+
+    document
+        .getElementById(
+            "calendarTitle"
+        )
+        .textContent =
+        calendarDate.toLocaleDateString(
+            "en-US",
+            {
+                month: "long",
+                year: "numeric"
+            }
+        );
+
+    const firstDay =
+        new Date(
+            year,
+            month,
+            1
+        ).getDay();
+
+    const offset =
+        firstDay === 0
+            ? 6
+            : firstDay - 1;
+
+    const days =
+        new Date(
+            year,
+            month + 1,
+            0
+        ).getDate();
+
+    const names = [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+    ];
+
+    let html = "";
+
+    names.forEach(day => {
+
+        html += `
+
+            <div class="calendar-head">
+                ${day}
+            </div>
+
+        `;
+
+    });
+
+    for (
+        let i = 0;
+        i < offset;
+        i++
+    ) {
+
+        html += `<div></div>`;
+
+    }
+
+    for (
+        let day = 1;
+        day <= days;
+        day++
+    ) {
+
+        const date =
+            `${year}-${String(
+                month + 1
+            ).padStart(2,"0")}-${String(
+                day
+            ).padStart(2,"0")}`;
+
+        const dayTasks =
+            tasks.filter(
+                t => t.date === date
+            );
+
+        const today =
+            date === todayString();
+
+        html += `
+
+            <div
+                class="
+                    calendar-day
+                    ${today
+                        ? "today"
+                        : ""}
+                "
+            >
+
+                <div class="calendar-number">
+                    ${day}
+                </div>
+
+                ${
+                    dayTasks
+                        .slice(0,4)
+                        .map(t => `
+
+                            <div
+                                class="calendar-task"
+                                title="${escapeHTML(
+                                    t.title
+                                )}"
+                            >
+
+                                ${escapeHTML(
+                                    t.title
+                                )}
+
+                            </div>
+
+                        `)
+                        .join("")
+                }
+
+            </div>
+
+        `;
+
+    }
+
+    calendar.innerHTML = html;
+
+}
+
+document
+    .getElementById("prevMonth")
+    .addEventListener(
+        "click",
+        () => {
+
+            calendarDate.setMonth(
+                calendarDate.getMonth() - 1
+            );
+
+            renderCalendar();
+
+        }
+    );
+
+document
+    .getElementById("nextMonth")
+    .addEventListener(
+        "click",
+        () => {
+
+            calendarDate.setMonth(
+                calendarDate.getMonth() + 1
+            );
+
+            renderCalendar();
+
+        }
+    );
+
+/* =========================================================
+   STREAK
+========================================================= */
+
+function calculateStreak() {
+
+    let streak = 0;
+
+    const date =
+        new Date();
+
+    while (true) {
+
+        const d =
+            `${date.getFullYear()}-${String(
+                date.getMonth() + 1
+            ).padStart(2,"0")}-${String(
+                date.getDate()
+            ).padStart(2,"0")}`;
+
+        const hasCompleted =
+            tasks.some(
+                task =>
+                    task.completed &&
+                    task.completedAt &&
+                    task.completedAt.startsWith(d)
+            );
+
+        if (!hasCompleted) {
+
+            break;
+
+        }
+
+        streak++;
+
+        date.setDate(
+            date.getDate() - 1
+        );
+
+    }
+
+    return streak;
+
+}
+
+/* =========================================================
+   STATISTICS
+========================================================= */
+
+function renderStats() {
+
+    const total =
+        tasks.length;
+
+    const done =
+        tasks.filter(
+            t => t.completed
+        ).length;
+
+    const rate =
+        total
+            ? Math.round(
+                done / total * 100
+            )
+            : 0;
+
+    document
+        .getElementById(
+            "totalTasks"
+        )
+        .textContent =
+        total;
+
+    document
+        .getElementById(
+            "totalDone"
+        )
+        .textContent =
+        done;
+
+    document
+        .getElementById(
+            "completionRate"
+        )
+        .textContent =
+        rate + "%";
+
+    document
+        .getElementById(
+            "statsStreak"
+        )
+        .textContent =
+        calculateStreak();
+
+    const chart =
+        document.getElementById(
+            "weekChart"
+        );
+
+    const days = [];
+
+    for (
+        let i = 6;
+        i >= 0;
+        i--
+    ) {
+
+        const d =
+            new Date();
+
+        d.setDate(
+            d.getDate() - i
+        );
+
+        const key =
+            `${d.getFullYear()}-${String(
+                d.getMonth() + 1
+            ).padStart(2,"0")}-${String(
+                d.getDate()
+            ).padStart(2,"0")}`;
+
+        const count =
+            tasks.filter(
+                t =>
+                    t.completed &&
+                    t.completedAt &&
+                    t.completedAt.startsWith(key)
+            ).length;
+
+        days.push({
+
+            name:
+                d.toLocaleDateString(
+                    "en-US",
+                    {
+                        weekday: "short"
+                    }
+                ),
+
+            count
+
+        });
+
+    }
+
+    const max =
+        Math.max(
+            1,
+            ...days.map(
+                d => d.count
+            )
+        );
+
+    chart.innerHTML =
+        days.map(day => {
+
+            const height =
+                Math.max(
+                    4,
+                    day.count / max * 170
+                );
+
+            return `
+
+                <div
+                    class="chart-bar"
+                    style="
+                        height:${height}px
+                    "
+                    title="${
+                        day.count
+                    } completed"
+                >
+
+                    <span>
+                        ${day.name}
+                    </span>
+
+                </div>
+
+            `;
+
+        }).join("");
+
+}
+
+/* =========================================================
+   FOCUS TIMER
+========================================================= */
+
+let timerSeconds =
+    25 * 60;
+
+let timerRunning =
+    false;
+
+let timerInterval =
+    null;
+
+function updateTimerDisplay() {
+
+    const minutes =
+        Math.floor(
+            timerSeconds / 60
+        );
+
+    const seconds =
+        timerSeconds % 60;
+
+    document
+        .getElementById(
+            "timerDisplay"
+        )
+        .textContent =
+        `${String(
+            minutes
+        ).padStart(2,"0")}:${String(
+            seconds
+        ).padStart(2,"0")}`;
+
+}
+
+function startTimer() {
+
+    if (timerRunning) return;
+
+    timerRunning = true;
+
+    document
+        .getElementById(
+            "timerStart"
+        )
+        .textContent =
+        "Pause";
+
+    timerInterval =
+        setInterval(
+            () => {
+
+                if (
+                    timerSeconds <= 0
+                ) {
+
+                    clearInterval(
+                        timerInterval
+                    );
+
+                    timerRunning = false;
+
+                    showToast(
+                        "Focus session complete! 🎉"
+                    );
+
+                    document
+                        .getElementById(
+                            "timerStart"
+                        )
+                        .textContent =
+                        "Start";
+
+                    return;
+
+                }
+
+                timerSeconds--;
+
+                updateTimerDisplay();
+
+            },
+            1000
+        );
+
+}
+
+function pauseTimer() {
+
+    clearInterval(
+        timerInterval
+    );
+
+    timerRunning = false;
+
+    document
+        .getElementById(
+            "timerStart"
+        )
+        .textContent =
+        "Start";
+
+}
+
+function resetTimer() {
+
+    clearInterval(
+        timerInterval
+    );
+
+    timerRunning = false;
+
+    timerSeconds =
+        25 * 60;
+
+    updateTimerDisplay();
+
+    document
+        .getElementById(
+            "timerStart"
+        )
+        .textContent =
+        "Start";
+
+}
+
+document
+    .getElementById(
+        "timerStart"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            if (timerRunning) {
+
+                pauseTimer();
+
+            }
+
+            else {
+
+                startTimer();
+
+            }
+
+        }
+    );
+
+document
+    .getElementById(
+        "timerReset"
+    )
+    .addEventListener(
+        "click",
+        resetTimer
+    );
+
+/* =========================================================
+   FOCUS TASKS
+========================================================= */
+
+function renderFocusTasks() {
+
+    const select =
+        document.getElementById(
+            "focusTaskSelect"
+        );
+
+    const openTasks =
+        tasks.filter(
+            t => !t.completed
+        );
+
+    select.innerHTML =
+        `
+
+            <option value="">
+                No task selected
+            </option>
+
+        ` +
+
+        openTasks
+            .map(
+                t => `
+
+                    <option
+                        value="${t.id}"
+                    >
+
+                        ${escapeHTML(
+                            t.title
+                        )}
+
+                    </option>
+
+                `
+            )
+            .join("");
+
+}
+
+/* =========================================================
+   THEME
+========================================================= */
+
+function loadTheme() {
+
+    const light =
+        localStorage.getItem(
+            "myTasksTheme"
+        ) === "light";
+
+    document
+        .body
+        .classList
+        .toggle(
+            "light",
+            light
+        );
+
+    document
+        .getElementById(
+            "darkToggle"
+        )
+        .checked =
+        !light;
+
+    document
+        .getElementById(
+            "themeBtn"
+        )
+        .textContent =
+        light
+            ? "☀️"
+            : "🌙";
+
+}
+
+function toggleTheme() {
+
+    const isLight =
+        document
+            .body
+            .classList
+            .toggle("light");
+
+    localStorage.setItem(
+        "myTasksTheme",
+        isLight
+            ? "light"
+            : "dark"
+    );
+
+    document
+        .getElementById(
+            "darkToggle"
+        )
+        .checked =
+        !isLight;
+
+    document
+        .getElementById(
+            "themeBtn"
+        )
+        .textContent =
+        isLight
+            ? "☀️"
+            : "🌙";
+
+}
+
+document
+    .getElementById(
+        "themeBtn"
+    )
+    .addEventListener(
+        "click",
+        toggleTheme
+    );
+
+document
+    .getElementById(
+        "darkToggle"
+    )
+    .addEventListener(
+        "change",
+        toggleTheme
+    );
+
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
+
+document
+    .getElementById(
+        "notificationBtn"
+    )
+    .addEventListener(
+        "click",
+        async () => {
+
+            if (
+                !(
+                    "Notification"
+                    in window
+                )
+            ) {
+
+                showToast(
+                    "This browser does not support notifications."
+                );
+
+                return;
+
+            }
+
+            const permission =
+                await Notification
+                    .requestPermission();
+
+            if (
+                permission ===
+                "granted"
+            ) {
+
+                showToast(
+                    "Notifications enabled."
+                );
+
+                new Notification(
+                    "My Tasks",
+                    {
+                        body:
+                            "Notifications are working! 🎉"
+                    }
+                );
+
+            }
+
+            else {
+
+                showToast(
+                    "Notifications were not allowed."
+                );
+
+            }
+
+        }
+    );
+
+/* =========================================================
+   EXPORT
+========================================================= */
+
+document
+    .getElementById(
+        "exportBtn"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            const data =
+                JSON.stringify(
+                    tasks,
+                    null,
+                    2
+                );
+
+            const blob =
+                new Blob(
+                    [data],
+                    {
+                        type:
+                            "application/json"
+                    }
+                );
+
+            const url =
+                URL.createObjectURL(
+                    blob
+                );
+
+            const a =
+                document.createElement(
+                    "a"
+                );
+
+            a.href = url;
+
+            a.download =
+                "my-tasks-backup.json";
+
+            a.click();
+
+            URL.revokeObjectURL(
+                url
+            );
+
+            showToast(
+                "Backup exported."
+            );
+
+        }
+    );
+
+/* =========================================================
+   IMPORT
+========================================================= */
+
+document
+    .getElementById(
+        "importBtn"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            document
+                .getElementById(
+                    "importFile"
+                )
+                .click();
+
+        }
+    );
+
+document
+    .getElementById(
+        "importFile"
+    )
+    .addEventListener(
+        "change",
+        event => {
+
+            const file =
+                event.target.files[0];
+
+            if (!file) return;
+
+            const reader =
+                new FileReader();
+
+            reader.onload = () => {
+
+                try {
+
+                    const imported =
+                        JSON.parse(
+                            reader.result
+                        );
+
+                    if (
+                        !Array.isArray(
+                            imported
+                        )
+                    ) {
+
+                        throw new Error();
+
+                    }
+
+                    tasks =
+                        imported;
+
+                    saveData();
+
+                    renderAll();
+
+                    showToast(
+                        "Backup imported successfully."
+                    );
+
+                }
+
+                catch {
+
+                    showToast(
+                        "Invalid backup file."
+                    );
+
+                }
+
+            };
+
+            reader.readAsText(
+                file
+            );
+
+        }
+    );
+
+/* =========================================================
+   CLEAR DATA
+========================================================= */
+
+document
+    .getElementById(
+        "clearBtn"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            if (
+                !confirm(
+                    "Are you sure you want to delete ALL tasks?"
+                )
+            ) {
+
+                return;
+
+            }
+
+            tasks = [];
+
+            saveData();
+
+            renderAll();
+
+            showToast(
+                "All tasks deleted."
+            );
+
+        }
+    );
+
+/* =========================================================
+   MOBILE MENU
+========================================================= */
+
+document
+    .getElementById(
+        "mobileMenu"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            document
+                .getElementById(
+                    "sidebar"
+                )
+                .classList
+                .toggle("open");
+
+        }
+    );
+
+/* =========================================================
+   GREETING
+========================================================= */
+
+function updateGreeting() {
+
+    const hour =
+        new Date().getHours();
+
+    let greeting;
+
+    if (hour < 12) {
+
+        greeting =
+            "Good morning";
+
+    }
+
+    else if (hour < 18) {
+
+        greeting =
+            "Good afternoon";
+
+    }
+
+    else {
+
+        greeting =
+            "Good evening";
+
+    }
+
+    document
+        .getElementById(
+            "greeting"
+        )
+        .textContent =
+        `${greeting} 👋`;
+
+    document
+        .getElementById(
+            "currentDate"
+        )
+        .textContent =
+        new Date().toLocaleDateString(
+            "en-US",
+            {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            }
+        );
+
+}
+
+/* =========================================================
+   RENDER EVERYTHING
+========================================================= */
+
+function renderAll() {
+
+    updateGreeting();
+
+    updateDashboard();
+
+    updateToday();
+
+    updateImportant();
+
+    renderAllTasks();
+
+    renderCalendar();
+
+    renderStats();
+
+    renderFocusTasks();
+
+}
+
+/* =========================================================
+   KEYBOARD SHORTCUTS
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    e => {
+
+        if (
+            (e.ctrlKey ||
+                e.metaKey) &&
+            e.key.toLowerCase() === "k"
+        ) {
+
+            e.preventDefault();
+
+            document
+                .getElementById(
+                    "searchInput"
+                )
+                ?.focus();
+
+        }
+
+        if (
+            (e.ctrlKey ||
+                e.metaKey) &&
+            e.key.toLowerCase() === "n"
+        ) {
+
+            e.preventDefault();
+
+            openTaskModal();
+
+        }
+
+        if (e.key === "Escape") {
+
+            closeModal();
+
+        }
+
+    }
+);
+
+/* =========================================================
+   START APPLICATION
+========================================================= */
+
+loadTheme();
+
+renderAll();
+
+</script>
+
+</body>
+</html>
+```
